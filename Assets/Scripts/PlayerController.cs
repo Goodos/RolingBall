@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameController gameController;
 
     private Rigidbody rb;
-    private bool canMove = true;
     private float playerPos = 0;
     private float startPlayerPos;
 
@@ -36,7 +35,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (canMove)
+        if (gameController.canMove)
         {
             Move();
             gameController.score = transform.position.z - startPlayerPos;
@@ -84,7 +83,7 @@ public class PlayerController : MonoBehaviour
     void Die()
     {
         rb.velocity = Vector3.zero;
-        canMove = false;
+        gameController.canMove = false;
         cameraController.followCam = false;
     }
 }

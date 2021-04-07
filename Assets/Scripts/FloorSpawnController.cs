@@ -18,7 +18,7 @@ public class FloorSpawnController : MonoBehaviour
 
     void Update()
     {
-        if (player.transform.position.z >= floors[floors.Count - 1].transform.position.z)
+        if (player.transform.position.z >= floors[floors.Count - 2].transform.position.z)
         {
             SpawnNextFloor(floors[floors.Count - 1].transform.position.z);
             DeSpawnPreviosFloor();
@@ -35,14 +35,21 @@ public class FloorSpawnController : MonoBehaviour
 
     void DeSpawnPreviosFloor()
     {
-        if (floors[floors.Count - 3] != null)
+        try
         {
-            foreach (Transform wall in floors[floors.Count - 3].transform)
+            if (floors[floors.Count - 4] != null)
             {
-                Destroy(wall.gameObject);
+                foreach (Transform child in floors[floors.Count - 4].transform)
+                {                    
+                    Destroy(child.gameObject);
+                }
+                LeanPool.Despawn(floors[floors.Count - 4]);
+                floors.Remove(floors[floors.Count - 4]);
             }
-            LeanPool.Despawn(floors[floors.Count - 3]);
-            floors.Remove(floors[floors.Count - 3]);
+        }
+        catch
+        {
+
         }
     }
 
@@ -85,7 +92,7 @@ public class FloorSpawnController : MonoBehaviour
 
     float TypeOfWall(float zPos, float rValue, Transform parent)
     {
-        GameObject firstWall = LeanPool.Spawn(wallPrefab, parent);
+        GameObject firstWall = Instantiate(wallPrefab, parent);
         switch (rValue)
         {
             case 1:
@@ -98,7 +105,7 @@ public class FloorSpawnController : MonoBehaviour
                 firstWall.transform.position = new Vector3(3f, firstWall.transform.position.y, zPos);
                 break;
             default:
-                GameObject secondWall = LeanPool.Spawn(wallPrefab, parent);
+                GameObject secondWall = Instantiate(wallPrefab, parent);
                 switch (rValue)
                 {
                     case 4:
@@ -118,7 +125,7 @@ public class FloorSpawnController : MonoBehaviour
         }
         if (Random.Range(0, 11) <= 3)
         {
-            GameObject newCoin = LeanPool.Spawn(coinPrefab, parent);
+            GameObject newCoin = Instantiate(coinPrefab, parent);
             float rCoin;
             switch (rValue)
             {

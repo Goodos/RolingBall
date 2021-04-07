@@ -10,12 +10,14 @@ public class UIController : MonoBehaviour
     [SerializeField] GameObject endGamePanel;
     [SerializeField] Text scoreText;
     [SerializeField] Text coinText;
-    [SerializeField] Button restartButton;
+    [SerializeField] GameObject pausedText;
+    [SerializeField] Button pauseButton;
 
     void Start()
     {
         gameController.endGameEvent += ShowLosePanel;
-        restartButton.onClick.AddListener(RestartButton);
+        pauseButton.onClick.AddListener(PauseButton);
+        pausedText.SetActive(false);
     }
 
     void Update()
@@ -28,8 +30,18 @@ public class UIController : MonoBehaviour
     {
         Instantiate(endGamePanel,gameObject.transform);
     }
-    void RestartButton()
+
+    void PauseButton()
     {
-        SceneManager.LoadScene("GameScene");
+        if (Time.timeScale == 1)
+        {
+            Time.timeScale = 0;
+            pausedText.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = 1;
+            pausedText.SetActive(false);
+        }
     }
 }
